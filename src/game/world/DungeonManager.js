@@ -8,12 +8,12 @@ class DungeonManager {
   }
 
   createDungeon(level) {
-    // Create ground with texture-like material
-    const groundGeometry = new THREE.PlaneGeometry(150, 150);
+    // Create ground with better appearance
+    const groundGeometry = new THREE.PlaneGeometry(200, 200);
     const groundMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x1a1a3e,
-      metalness: 0.1,
-      roughness: 0.9
+      color: 0x0f1a3e,
+      metalness: 0.15,
+      roughness: 0.95
     });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2;
@@ -21,31 +21,26 @@ class DungeonManager {
     this.scene.add(ground);
     this.objects.push(ground);
 
-    // Create walls (boundaries) with gradient
     this.createWalls(level);
-
-    // Add obstacles based on level
     this.createObstacles(level);
-
-    // Add environmental decorations
     this.createDecorations(level);
   }
 
   createWalls(level) {
     const wallMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x2a2a4e,
-      metalness: 0.4,
-      roughness: 0.6
+      color: 0x2a2a5e,
+      metalness: 0.5,
+      roughness: 0.5
     });
 
     const wallPositions = [
-      { x: 0, y: 2, z: -75 },
-      { x: 0, y: 2, z: 75 },
-      { x: -75, y: 2, z: 0 },
-      { x: 75, y: 2, z: 0 }
+      { x: 0, y: 3, z: -100 },
+      { x: 0, y: 3, z: 100 },
+      { x: -100, y: 3, z: 0 },
+      { x: 100, y: 3, z: 0 }
     ];
 
-    const wallGeometry = new THREE.BoxGeometry(150, 5, 2);
+    const wallGeometry = new THREE.BoxGeometry(200, 6, 3);
 
     wallPositions.forEach(pos => {
       const wall = new THREE.Mesh(wallGeometry, wallMaterial);
@@ -59,26 +54,26 @@ class DungeonManager {
 
   createObstacles(level) {
     const obstacleMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x4a4a6e,
+      color: 0x4a4a7e,
       metalness: 0.6,
-      roughness: 0.4
+      roughness: 0.3
     });
 
-    const count = 8 + level * 2;
+    const count = 10 + level * 3;
     for (let i = 0; i < count; i++) {
-      const size = Math.random() * 4 + 2;
-      const obstacleGeometry = new THREE.BoxGeometry(size, size * 1.5, size);
+      const size = Math.random() * 5 + 2.5;
+      const obstacleGeometry = new THREE.BoxGeometry(size, size * 1.8, size);
       const obstacle = new THREE.Mesh(obstacleGeometry, obstacleMaterial);
       
       let validPosition = false;
       let x, z;
       while (!validPosition) {
-        x = (Math.random() - 0.5) * 120;
-        z = (Math.random() - 0.5) * 120;
-        validPosition = Math.sqrt(x * x + z * z) > 15; // Avoid player spawn area
+        x = (Math.random() - 0.5) * 160;
+        z = (Math.random() - 0.5) * 160;
+        validPosition = Math.sqrt(x * x + z * z) > 20;
       }
       
-      obstacle.position.set(x, size * 0.75, z);
+      obstacle.position.set(x, size * 0.9, z);
       obstacle.rotation.y = Math.random() * Math.PI;
       obstacle.castShadow = true;
       obstacle.receiveShadow = true;
@@ -89,22 +84,22 @@ class DungeonManager {
 
   createDecorations(level) {
     const decorMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x6a5acd,
-      metalness: 0.7,
-      roughness: 0.3,
-      emissive: 0x6a5acd,
-      emissiveIntensity: 0.2
+      color: 0x7a6aed,
+      metalness: 0.8,
+      roughness: 0.2,
+      emissive: 0x7a6aed,
+      emissiveIntensity: 0.4
     });
 
     // Crystals
-    for (let i = 0; i < 5 + level; i++) {
-      const crystalGeometry = new THREE.ConeGeometry(0.5, 2, 8);
+    for (let i = 0; i < 8 + level; i++) {
+      const crystalGeometry = new THREE.ConeGeometry(0.6, 2.5, 8);
       const crystal = new THREE.Mesh(crystalGeometry, decorMaterial);
       
       crystal.position.set(
-        (Math.random() - 0.5) * 100,
-        1,
-        (Math.random() - 0.5) * 100
+        (Math.random() - 0.5) * 140,
+        1.2,
+        (Math.random() - 0.5) * 140
       );
       crystal.rotation.y = Math.random() * Math.PI;
       crystal.castShadow = true;

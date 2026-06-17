@@ -11,12 +11,13 @@ class Player extends Entity {
     this.health = this.maxHealth;
     this.skill = 15;
     this.defense = 5;
+    this.attackSpeed = 1;
     this.stamina = 100;
     this.maxStamina = 100;
     this.mana = 50;
     this.maxMana = 50;
     this.velocity = new THREE.Vector3();
-    this.speed = 20;
+    this.speed = 22;
     this.isMoving = false;
     this.keys = {};
     this.attackCooldown = 0;
@@ -28,9 +29,10 @@ class Player extends Entity {
     };
     this.isDashing = false;
     this.dashDirection = new THREE.Vector3();
+    this.comboCounter = 0;
+    this.comboTime = 0;
     
-    // Visual enhancements
-    this.mesh.material.emissiveIntensity = 0.3;
+    this.mesh.material.emissiveIntensity = 0.4;
     
     this.setupInput();
   }
@@ -45,7 +47,6 @@ class Player extends Entity {
   }
 
   update(deltaTime) {
-    // Handle movement
     const moveDirection = new THREE.Vector3();
     
     if (this.keys['w']) moveDirection.z -= 1;
@@ -55,26 +56,26 @@ class Player extends Entity {
     
     if (moveDirection.length() > 0) {
       moveDirection.normalize();
-      const moveSpeed = this.isDashing ? this.speed * 2 : this.speed;
+      const moveSpeed = this.isDashing ? this.speed * 2.5 : this.speed;
       this.velocity.copy(moveDirection).multiplyScalar(moveSpeed);
       this.mesh.position.add(this.velocity.clone().multiplyScalar(deltaTime));
       this.isMoving = true;
     } else {
       this.isMoving = false;
-      this.velocity.multiplyScalar(0.85);
+      this.velocity.multiplyScalar(0.8);
     }
 
-    // Stamina recovery
+    // Stamina management
     if (!this.isMoving) {
-      this.stamina = Math.min(this.stamina + 40 * deltaTime, this.maxStamina);
+      this.stamina = Math.min(this.stamina + 50 * deltaTime, this.maxStamina);
     } else {
-      this.stamina = Math.max(this.stamina - 15 * deltaTime, 0);
+      this.stamina = Math.max(this.stamina - 20 * deltaTime, 0);
     }
 
     // Mana recovery
-    this.mana = Math.min(this.mana + 20 * deltaTime, this.maxMana);
+    this.mana = Math.min(this.mana + 25 * deltaTime, this.maxMana);
 
-    // Update cooldowns
+    // Cooldowns
     if (this.attackCooldown > 0) {
       this.attackCooldown -= deltaTime;
     }
@@ -84,10 +85,14 @@ class Player extends Entity {
       }
     }
 
-    // End dash
-    if (this.isDashing) {
-      this.isDashing = false;
+    // Combo system
+    if (this.comboTime > 0) {
+      this.comboTime -= deltaTime;
+    } else {
+      this.comboCounter = 0;
     }
+
+    this.isDashing = false;
   }
 
   gainExperience(amount) {
@@ -101,25 +106,31 @@ class Player extends Entity {
     this.level += 1;
     this.experience = 0;
     this.experienceToNextLevel = Math.floor(this.experienceToNextLevel * 1.5);
-    this.maxHealth = Math.floor(100 + this.level * 25);
+    this.maxHealth = Math.floor(120 + this.level * 30);
     this.health = this.maxHealth;
-    this.skill = Math.floor(10 + this.level * 3);
-    this.defense = Math.floor(5 + this.level * 1);
-    this.maxStamina = Math.floor(100 + this.level * 5);
+    this.skill = Math.floor(12 + this.level * 4);
+    this.defense = Math.floor(5 + this.level * 1.5);
+    this.attackSpeed = Math.min(1.5, this.attackSpeed + 0.05);
+    this.maxStamina = Math.floor(100 + this.level * 8);
     this.stamina = this.maxStamina;
-    this.maxMana = Math.floor(50 + this.level * 8);
+    this.maxMana = Math.floor(50 + this.level * 12);
     this.mana = this.maxMana;
-    console.log(`🌟 Level Up! Current Level: ${this.level}`);
+    console.log(`⭐ Level ${this.level}! Stats increased!`);
   }
 
   attack(target) {
     if (this.stamina < 15) return 0;
     if (this.attackCooldown > 0) return 0;
     this.stamina -= 15;
-    this.attackCooldown = 0.4;
+    this.attackCooldown = 0.4 / this.attackSpeed;
+    
+    this.comboCounter += 1;
+    this.comboTime = 2;
+    
     const baseDamage = this.skill + Math.random() * 15;
     const critChance = Math.random();
-    const damage = critChance > 0.8 ? baseDamage * 1.5 : baseDamage;
+    const comboBonus = this.comboCounter > 1 ? (this.comboCounter * 0.1) : 0;
+    const damage = (critChance > 0.8 ? baseDamage * 1.8 : baseDamage) * (1 + comboBonus);
     return damage;
   }
 
@@ -130,30 +141,30 @@ class Player extends Entity {
       case 'slash':
         if (this.mana >= 15) {
           this.mana -= 15;
-          this.skillCooldowns['slash'] = 0.6;
-          return this.skill * 1.2 + Math.random() * 20;
+          this.skillCooldowns['slash'] = 0.5;
+          return this.skill * 1.4 + Math.random() * 25;
         }
         break;
       case 'powerAttack':
-        if (this.stamina >= 40) {
-          this.stamina -= 40;
-          this.skillCooldowns['powerAttack'] = 1.5;
-          return this.skill * 2.5 + Math.random() * 30;
+        if (this.stamina >= 45) {
+          this.stamina -= 45;
+          this.skillCooldowns['powerAttack'] = 1.2;
+          return this.skill * 3.2 + Math.random() * 40;
         }
         break;
       case 'dash':
-        if (this.stamina >= 20) {
-          this.stamina -= 20;
-          this.skillCooldowns['dash'] = 1.0;
+        if (this.stamina >= 25) {
+          this.stamina -= 25;
+          this.skillCooldowns['dash'] = 0.8;
           this.isDashing = true;
           return true;
         }
         break;
       case 'heal':
-        if (this.mana >= 25) {
-          this.mana -= 25;
-          this.skillCooldowns['heal'] = 2.0;
-          const healAmount = 50 + this.level * 5;
+        if (this.mana >= 30) {
+          this.mana -= 30;
+          this.skillCooldowns['heal'] = 1.5;
+          const healAmount = 60 + this.level * 8;
           this.heal(healAmount);
           return true;
         }

@@ -3,7 +3,7 @@ class CombatSystem {
     this.attackCooldown = {};
   }
 
-  checkCollisions(player, monsters, boss, particleSystem) {
+  checkCollisions(player, monsters, boss, particleSystem, onDamage) {
     // Player vs Monsters
     monsters.forEach(monster => {
       const distance = player.mesh.position.distanceTo(monster.mesh.position);
@@ -12,12 +12,22 @@ class CombatSystem {
         const damage = player.attack(monster);
         if (damage > 0) {
           monster.takeDamage(damage);
-          const isCrit = damage > player.skill * 1.2;
+          if (onDamage) onDamage(damage);
+          
+          const isCrit = damage > player.skill * 1.3;
           if (isCrit) {
-            console.log(`💥 CRITICAL! ${damage.toFixed(2)} damage!`);
-            particleSystem.createExplosion(monster.mesh.position, 0xffaa00, 0.8);
+            console.log(`🔥 CRITICAL! ${damage.toFixed(2)} damage!`);
+            particleSystem.createExplosion(monster.mesh.position, 0xffaa00, 1.2);
           } else {
-            particleSystem.createDamageNumber(monster.mesh.position, damage.toFixed(0), 0xff0000);
+            particleSystem.createDamageNumber(monster.mesh.position, Math.floor(damage), 0xff4444);
+          }
+          
+          if (player.comboCounter > 1) {
+            particleSystem.createDamageNumber(
+              monster.mesh.position,
+              `x${player.comboCounter}`,
+              0xffff00
+            );
           }
         }
       }
@@ -31,12 +41,14 @@ class CombatSystem {
         const damage = player.attack(boss);
         if (damage > 0) {
           boss.takeDamage(damage);
-          const isCrit = damage > player.skill * 1.2;
+          if (onDamage) onDamage(damage);
+          
+          const isCrit = damage > player.skill * 1.3;
           if (isCrit) {
-            console.log(`💥 CRITICAL BOSS HIT! ${damage.toFixed(2)} damage!`);
-            particleSystem.createExplosion(boss.mesh.position, 0xffff00, 1.2);
+            console.log(`🔥 CRITICAL BOSS HIT! ${damage.toFixed(2)} damage!`);
+            particleSystem.createExplosion(boss.mesh.position, 0xffff00, 1.5);
           } else {
-            particleSystem.createDamageNumber(boss.mesh.position, damage.toFixed(0), 0xffaa00);
+            particleSystem.createDamageNumber(boss.mesh.position, Math.floor(damage), 0xffaa00);
           }
         }
       }

@@ -7,20 +7,36 @@ class Entity {
     this.maxHealth = 100;
     this.position = new THREE.Vector3(x, y, z);
     
-    // Create mesh
+    // Create enhanced mesh with glow
     const geometry = new THREE.BoxGeometry(size, size * 2, size);
     const color = this.getColorByType(type);
     const material = new THREE.MeshStandardMaterial({ 
       color: color,
-      metalness: 0.3,
-      roughness: 0.7,
+      metalness: 0.4,
+      roughness: 0.6,
       emissive: color,
-      emissiveIntensity: 0.2
+      emissiveIntensity: 0.3
     });
     this.mesh = new THREE.Mesh(geometry, material);
     this.mesh.position.copy(this.position);
     this.mesh.castShadow = true;
     this.mesh.receiveShadow = true;
+    
+    // Add outline glow effect
+    this.addGlowEffect(color);
+  }
+
+  addGlowEffect(color) {
+    const outlineGeometry = new THREE.BoxGeometry(1.05, 2.1, 1.05);
+    const outlineMaterial = new THREE.MeshBasicMaterial({
+      color: color,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.3
+    });
+    const outline = new THREE.Mesh(outlineGeometry, outlineMaterial);
+    outline.position.copy(this.mesh.position);
+    this.mesh.add(outline);
   }
 
   getColorByType(type) {

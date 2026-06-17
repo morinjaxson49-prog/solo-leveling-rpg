@@ -13,7 +13,7 @@
     
     body {
       overflow: hidden;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Courier New', monospace;
       background: linear-gradient(135deg, #0a0e27 0%, #16213e 100%);
     }
 
@@ -29,16 +29,20 @@
       right: 30px;
       color: #00ff00;
       font-size: 13px;
-      background: rgba(0, 0, 0, 0.85);
-      padding: 18px;
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px;
       border: 2px solid #00ff00;
       border-radius: 8px;
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
       text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+      font-family: 'Courier New', monospace;
+      max-width: 250px;
     }
     
     .control-section {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      line-height: 1.6;
     }
     
     .control-section:last-child {
@@ -48,28 +52,31 @@
     .control-title {
       color: #ffaa00;
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #00ff00;
+      padding-bottom: 4px;
     }
   </style>
 </head>
 <body>
   <div id="controls">
     <div class="control-section">
-      <div class="control-title">Movement:</div>
-      W/A/S/D - Move
+      <div class="control-title">🎮 MOVEMENT</div>
+      W/A/S/D - Move around
     </div>
     <div class="control-section">
-      <div class="control-title">Skills:</div>
-      1 - Slash (15 Mana)<br>
-      2 - Power Attack (40 Stm)<br>
-      3 - Dash (20 Stm)<br>
-      4 - Heal (25 Mana)
+      <div class="control-title">⚡ SKILLS</div>
+      1: Slash (15 Mana)<br>
+      2: Power Atk (40 Stm)<br>
+      3: Dash (25 Stm)<br>
+      4: Heal (30 Mana)
     </div>
     <div class="control-section">
-      <div class="control-title">Tips:</div>
-      • Level up to get stronger<br>
+      <div class="control-title">💡 TIPS</div>
+      • Kill 10 → Boss spawns<br>
+      • Use skills strategically<br>
       • Manage stamina & mana<br>
-      • Bosses appear every 10 kills
+      • Combo for bonus damage
     </div>
   </div>
 
