@@ -1,7 +1,7 @@
 {
   "name": "solo-leveling-rpg",
-  "version": "0.1.0",
-  "description": "A 3D Solo Leveling inspired RPG game",
+  "version": "0.2.0",
+  "description": "A 3D Solo Leveling inspired RPG game with enhanced gameplay",
   "main": "dist/index.js",
   "scripts": {
     "dev": "webpack serve --mode development",

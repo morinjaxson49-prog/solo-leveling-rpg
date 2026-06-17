@@ -5,97 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Solo Leveling 3D RPG</title>
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
       overflow: hidden;
-      font-family: Arial, sans-serif;
-      background-color: #1a1a2e;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #16213e 100%);
     }
 
     canvas {
       display: block;
       width: 100%;
-      height: 100%;
-    }
-
-    #ui {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      color: #00ff00;
-      font-size: 18px;
-      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-      font-weight: bold;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
-      border: 2px solid #00ff00;
-      border-radius: 5px;
-      min-width: 250px;
-    }
-
-    .stat {
-      margin: 10px 0;
-    }
-
-    .stat-bar {
-      width: 200px;
-      height: 15px;
-      background: #333;
-      border: 1px solid #00ff00;
-      margin-top: 5px;
-      position: relative;
-    }
-
-    .stat-bar-fill {
-      height: 100%;
-      background: #00ff00;
-      transition: width 0.3s ease;
+      height: 100vh;
     }
 
     #controls {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
+      bottom: 30px;
+      right: 30px;
       color: #00ff00;
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 15px;
+      font-size: 13px;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 18px;
       border: 2px solid #00ff00;
-      border-radius: 5px;
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+    }
+    
+    .control-section {
+      margin-bottom: 12px;
+    }
+    
+    .control-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .control-title {
+      color: #ffaa00;
+      font-weight: bold;
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
-  <div id="ui">
-    <div class="stat">Level: <span id="level">1</span></div>
-    <div class="stat">
-      Experience:
-      <div class="stat-bar">
-        <div class="stat-bar-fill" id="expBar"></div>
-      </div>
-    </div>
-    <div class="stat">
-      Health:
-      <div class="stat-bar">
-        <div class="stat-bar-fill" id="healthBar"></div>
-      </div>
-    </div>
-    <div class="stat">
-      Stamina:
-      <div class="stat-bar">
-        <div class="stat-bar-fill" id="staminaBar"></div>
-      </div>
-    </div>
-    <div class="stat">Skill: <span id="skill">10</span></div>
-  </div>
-
   <div id="controls">
-    <strong>Controls:</strong><br>
-    W - Forward<br>
-    A - Left<br>
-    S - Backward<br>
-    D - Right<br>
-    Auto-attack when close to monsters
+    <div class="control-section">
+      <div class="control-title">Movement:</div>
+      W/A/S/D - Move
+    </div>
+    <div class="control-section">
+      <div class="control-title">Skills:</div>
+      1 - Slash (15 Mana)<br>
+      2 - Power Attack (40 Stm)<br>
+      3 - Dash (20 Stm)<br>
+      4 - Heal (25 Mana)
+    </div>
+    <div class="control-section">
+      <div class="control-title">Tips:</div>
+      • Level up to get stronger<br>
+      • Manage stamina & mana<br>
+      • Bosses appear every 10 kills
+    </div>
   </div>
 
   <script src="game.js"></script>

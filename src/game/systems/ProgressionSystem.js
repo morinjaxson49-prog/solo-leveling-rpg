@@ -5,7 +5,10 @@ class ProgressionSystem {
 
   addExperience(player, amount) {
     player.gainExperience(amount);
-    console.log(`Gained ${amount} experience! Total: ${player.experience}/${player.experienceToNextLevel}`);
+    const nextLevel = player.experienceToNextLevel;
+    const currentExp = player.experience;
+    const progress = (currentExp / nextLevel * 100).toFixed(1);
+    console.log(`📈 +${amount} EXP! Progress: ${progress}%`);
   }
 
   getPlayerStats(player) {
@@ -13,8 +16,13 @@ class ProgressionSystem {
       level: player.level,
       experience: player.experience,
       health: player.health,
+      maxHealth: player.maxHealth,
       skill: player.skill,
-      stamina: player.stamina
+      defense: player.defense,
+      stamina: player.stamina,
+      maxStamina: player.maxStamina,
+      mana: player.mana,
+      maxMana: player.maxMana
     };
   }
 
